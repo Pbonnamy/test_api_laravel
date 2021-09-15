@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function showOne($id)
     {
-        return ['user' => User::findOrFail($id)]; 
+        return ['users' => User::findOrFail($id)]; 
     }
 
     public function showAll()
