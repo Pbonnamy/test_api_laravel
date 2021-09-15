@@ -8,8 +8,13 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function show($id)
+    public function showOne($id)
     {
-        return ['user' => User::findOrFail($id)];
+        return ['user' => User::findOrFail($id)]; 
+    }
+
+    public function showAll()
+    {
+        return ['user' => User::all()]; 
     }
 }

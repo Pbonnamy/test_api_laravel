@@ -18,12 +18,12 @@ class CreateUsersTable extends Migration
             $table->string('pseudo',255);
             $table->text('bio');
             $table->string('phone',255);
-            $table->dateTime('created_at');
-            $table->dateTime('updated_at');
             $table->string('address',255);
             $table->string('city',255);
             $table->string('zipcode',255);
             $table->string('country',255);
+            $table->dateTime('created_at');
+            $table->dateTime('updated_at');
         });
     }
 

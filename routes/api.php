@@ -23,4 +23,6 @@ Route::get('hello-world', function () {
     return json_encode('Hello World !');
 });
 
-Route::get('/user/{id}', [UserController::class, 'show']);
+Route::get('/user/{id}', [UserController::class, 'showOne']);
+
+Route::get('user', [UserController::class, 'showAll']);
