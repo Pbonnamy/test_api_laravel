@@ -25,8 +25,8 @@ class CreateAccountsTable extends Migration
         });
 
         Schema::table('accounts', function(Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('immeuble_id')->references('id')->on('immeubles');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');;
+            $table->foreign('immeuble_id')->references('id')->on('immeubles')->onDelete('cascade');;
         });
     }
 

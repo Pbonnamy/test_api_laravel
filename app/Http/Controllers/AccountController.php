@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
@@ -12,9 +14,9 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function read()
     {
-        //
+        return ['accounts' => Account::all()]; 
     }
 
     /**
@@ -22,42 +24,24 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
-    }
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer|exists:users,id',
+            'immeuble_id' => 'required|integer|exists:immeubles,id',
+            'content' => 'required|string|min:10',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Account  $account
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Account $account)
-    {
-        //
-    }
+        $account = Account::create($validator->validated());
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Account  $account
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Account $account)
-    {
-        //
+        return response()->json([
+            'message' => 'Account successfully created',
+            'account' => $account
+        ], 201);
     }
 
     /**
@@ -67,9 +51,26 @@ class AccountController extends Controller
      * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Account $account)
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required_without_all:immeuble_id,content|exists:users,id',
+            'immeuble_id' => 'required_without_all:immeuble_id,content|integer|exists:immeubles,id',
+            'content' => 'required_without_all:user_id,immeuble_id|string|min:10',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $account=Account::findOrFail($id);
+
+        $account->update($validator->validated());
+
+        return response()->json([
+            'message' => 'Account successfully updated',
+            'account' => $account
+        ], 201);
     }
 
     /**
@@ -78,8 +79,14 @@ class AccountController extends Controller
      * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Account $account)
+    public function delete($id)
     {
-        //
+        $account = Account::findOrFail($id);
+
+        $account->delete();
+
+        return response()->json([
+            'message' => 'Account successfully deleted',
+        ], 200);
     }
 }
