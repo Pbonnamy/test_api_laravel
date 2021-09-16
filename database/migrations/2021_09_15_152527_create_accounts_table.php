@@ -11,15 +11,22 @@ class CreateAccountsTable extends Migration
      *
      * @return void
      */
+
+
     public function up()
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('immeuble_id')->references('id')->on('immeuble');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('immeuble_id');
             $table->text('content');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
+        });
+
+        Schema::table('accounts', function(Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('immeuble_id')->references('id')->on('immeubles');
         });
     }
 

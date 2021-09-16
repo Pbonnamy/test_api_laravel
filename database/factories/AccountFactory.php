@@ -24,11 +24,12 @@ class AccountFactory extends Factory
     public function definition()
     {
         $usersIDs = DB::table('users')->pluck('id');
-        $immeubleIDs = [];
+        $immeubleIDs = DB::table('immeubles')->pluck('id');
 
         return [
-            'name' => $this->faker->name(),
-            
+            'user_id' => $this->faker->randomElement($usersIDs),
+            'immeuble_id' => $this->faker->randomElement($immeubleIDs),
+            'content' => $this->faker->text(100),
         ];
     }
 }
